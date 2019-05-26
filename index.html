@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel=" stylesheet" type="text/css" href='styles/perfect-scrollbar.css'>
+    <link rel=" stylesheet" type="text/css" href='styles/style.css'>
+</head>
+<body>
+    <div class="back-image"></div>
+    <div class="main">
+        <div class="title">
+            <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                        <a class="title__top">Zanieczyszczenie powietrza </a>
+                        <br/>
+                        <a class="title__bottom">Wskaźnik jakości powietrza w czasie rzeczywistym </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu">
+                    <div class="container" style="padding: 0px;">
+                            <div class="row">
+                                <div class="col-7" style="padding-right: 0px;">
+                                    <div class="manu__item manu__item--selected" style="margin-left: 0px;">AIRLY</div>
+                                    <div class="manu__item">PG</div>
+                                    <div class="manu__item">PORÓWNANIE</div>
+                                 </div>
+                                 <div class="col-5">
+                                        <div class="manu__item manu__item--notification">WŁĄCZ POWIADOMIENIE</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-7 col--no-padding">
+                        <div class="informations">
+                            <div class="informations__row">
+                                <div class="row__title"><span class="name__data">AIRLY</span> <span class="current_date">Poniedziałek 22.04</span></div>
+                            </div>
+                            <div class="separator"></div>
+                            <div class="informations__row informations__row--rate">
+                                <div class="row__rate-number">8</div>
+                                <div class="row__rate">Dobra jakość powietrza</div>
+                            </div>
+                            <div class="separator"></div>
+                            <div class="informations__row informations__row--current">
+                                    <div class="row_name">Pomiary na żywo</div>
+                                <div class="row__current row__current--half">
+                                    <div class="current current_pm10">PM10: <span class="current__value">6</span> <span class="current__unit">µg/m³</span></div>
+                                    <div class="current current_pm25">PM2.5: <span class="current__value">4</span> <span class="current__unit">µg/m³</span></div>
+                                    <div class="current current_pm1">PM1: <span class="current__value">3</span> <span class="current__unit">µg/m³</span></div>
+                                </div>
+                                <div class="row__current row__current--half">
+                                    <div class="current current_tem">TEMPERATURA: <span class="current__value">15</span> <span class="current__unit">°C</span></div>
+                                    <div class="current current_pres">CIŚNIENIE: <span class="current__value">1012</span> <span class="current__unit">hPa</span></div>
+                                    <div class="current current_hum">WILGOTNOŚĆ: <span class="current__value">81</span> <span class="current__unit">%</span></div>
+                                </div>
+                            </div>
+                            <div class="informations__row">
+                                <div class="row_name">Dane historyczne</div>
+                                <div class="row__menu-historic">
+                                    <div class="menu-historic__item">CAQI</div>
+                                    <div class="menu-historic__item menu-historic__item--selected">PM</div>
+                                    <div class="menu-historic__item">TEMPERATURA</div>
+                                </div>
+                                <div class="row__historic ">
+                                    <canvas class="historic__graph" id="graphAirlyHistoric"></canvas>
+                                </div>
+                            </div>
+                            <div class="informations__row">
+                                <div class="row_name">Prognoza na nastepne dni</div>
+                                <div class="row__menu-historic">
+                                    <div class="menu-historic__item menu-historic__item--selected">CAQI</div>
+                                    <div class="menu-historic__item ">PM</div>
+                                    <div class="menu-historic__item">TEMPERATURA</div>
+                                </div>
+                                <div class="row__prediction ">
+                                    <canvas class="prediction__graph" id="graphAirlyPrediction"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 col--no-padding">
+                        <div class="map">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+   
+    </div>    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="js/perfect-scrollbar.js"></script>
+    <script type="text/javascript" src="js/date.js"></script>
+    <script>
+        /*function initMap() {
+          var uluru = {lat: -25.344, lng: 131.036};
+          var map = new google.maps.Map(
+              document.getElementById('map'), {zoom: 4, center: uluru});
+          var marker = new google.maps.Marker({position: uluru, map: map});
+        }*/
+        function initMap() {
+        var locations = [
+      ['Politechnika Gdańska', 54.3715969, 18.6152441,18, 2],
+      ['Czujnik AIRLY', 54.37333, 18.61919, 1]
+    ];
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(54.3715969, 18.6152441,18),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      console.log(marker);
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+};
+            </script>
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwtMriYqL-cdBmdAmb6vpdsXzzuZkoOGQ&callback=initMap">
+            </script>
+    <script src="index.js"></script>
+    <script>
+      /*  var directionsDisplay,
+            directionsService,
+            map;
+        
+        function initialize() {
+          var directionsService = new google.maps.DirectionsService();
+          directionsDisplay = new google.maps.DirectionsRenderer();
+          var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+          var mapOptions = { zoom:7, mapTypeId: google.maps.MapTypeId.ROADMAP, center: chicago }
+          map = new google.maps.Map(document.getElementById("map"), mapOptions);
+          directionsDisplay.setMap(map);
+        }
+        */
+       
+ </script>
+    
+</body>
+</html> 
+
+
+<!--
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+// Initialize and add the map
+function initMap() {
+  // The location of Uluru
+  var uluru = {lat: -25.344, lng: 131.036};
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 4, center: uluru});
+  // The marker, positioned at Uluru
+  var marker = new google.maps.Marker({position: uluru, map: map});
+}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwtMriYqL-cdBmdAmb6vpdsXzzuZkoOGQ&callback=initMap">
+    </script>
+  </body>
+</html>
+-->
