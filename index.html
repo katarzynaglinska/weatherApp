@@ -40,7 +40,7 @@
                     <div class="col-7 col--no-padding">
                         <div class="informations">
                             <div class="informations__row">
-                                <div class="row__title"><span class="name__data">AIRLY</span> <span class="current_date">Poniedziałek 22.04</span></div>
+                                <div class="row__title"><span class="name__data">AIRLY</span> <span class="current-date__day-name"></span> <span class="current-date__day-date"></span></div>
                             </div>
                             <div class="separator"></div>
                             <div class="informations__row informations__row--rate">
@@ -64,9 +64,9 @@
                             <div class="informations__row">
                                 <div class="row_name">Dane historyczne</div>
                                 <div class="row__menu-historic">
-                                    <div class="menu-historic__item">CAQI</div>
-                                    <div class="menu-historic__item menu-historic__item--selected">PM</div>
-                                    <div class="menu-historic__item">TEMPERATURA</div>
+                                    <div class="menu-historic__item" id="historicCaqiBtn">CAQI</div>
+                                    <div class="menu-historic__item menu-historic__item--selected" id="historicPmBtn">PM</div>
+                                    <div class="menu-historic__item" id="historicTempBtn">TEMPERATURA</div>
                                 </div>
                                 <div class="row__historic ">
                                     <canvas class="historic__graph" id="graphAirlyHistoric"></canvas>
@@ -74,10 +74,9 @@
                             </div>
                             <div class="informations__row">
                                 <div class="row_name">Prognoza na nastepne dni</div>
-                                <div class="row__menu-historic">
-                                    <div class="menu-historic__item menu-historic__item--selected">CAQI</div>
-                                    <div class="menu-historic__item ">PM</div>
-                                    <div class="menu-historic__item">TEMPERATURA</div>
+                                <div class="row__menu-prediction">
+                                    <div class="menu-prediction__item" id="predictionCaqiBtn">CAQI</div>
+                                    <div class="menu-prediction__item menu-prediction__item--selected" id="predictionPmBtn">PM</div>
                                 </div>
                                 <div class="row__prediction ">
                                     <canvas class="prediction__graph" id="graphAirlyPrediction"></canvas>
@@ -104,6 +103,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="js/perfect-scrollbar.js"></script>
     <script type="text/javascript" src="js/date.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
     <script>
         /*function initMap() {
           var uluru = {lat: -25.344, lng: 131.036};
