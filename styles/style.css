@@ -103,6 +103,12 @@ body {
   overflow-y: scroll;
   position: relative;
 }
+.content .informations__pg {
+  display: none;
+}
+.content .informations__comparison {
+  display: none;
+}
 .content .map {
   height: 420px;
   background-color: #e0e0e0;
@@ -132,6 +138,10 @@ body {
   height: 167px;
   padding-top: 15px;
 }
+.informations__row--currentpg {
+  height: 80px;
+  padding-top: 15px;
+}
 
 .row__title {
   text-align: center;
@@ -148,7 +158,8 @@ body {
 
 .row__rate-number {
   float: left;
-  width: 30px;
+  min-width: 30px;
+  padding: 3px;
   text-align: center;
   border: 2px #18e02a solid;
   border-radius: 5px;

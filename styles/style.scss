@@ -114,6 +114,14 @@ body{
         margin-right: 5px;
         overflow-y: scroll;
         position: relative;
+
+        &__pg{
+            display: none;
+        }
+
+        &__comparison{
+            display: none;
+        }
     }
 
     .map{
@@ -145,6 +153,11 @@ body{
         height: 167px;
         padding-top: 15px;
     }
+
+    &--currentpg{
+        height: 80px;
+        padding-top: 15px;
+    }
 }
 
 .row__title{
@@ -162,7 +175,8 @@ body{
 
 .row__rate-number{
     float: left;
-    width: 30px;
+    min-width: 30px;
+    padding: 3px;
     text-align: center;
     border: 2px #18e02a solid;
     border-radius: 5px;

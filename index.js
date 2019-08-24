@@ -1,6 +1,8 @@
 moment.locale('pl')
 
 initVC = {};
+
+// AIRLY
 initVC.dataFromAirlyCurrent = null;
 initVC.dataFromAirlyHistory = null;
 initVC.dataFromAirlyForecast = null;
@@ -15,62 +17,57 @@ initVC.airlyCaqiFromAirlyForecast = [];
 initVC.datasFromAirlyForecast = [];
 initVC.chartHistory;
 initVC.chartForecast;
-initVC.chartHistoryIndex = document.getElementById("graphAirlyHistoric").getContext('2d');
-initVC.chartForecastIndex = document.getElementById("graphAirlyPrediction").getContext('2d');
+initVC.chartAirlyHistoryIndex = document.getElementById("graphAirlyHistoric").getContext('2d');
+initVC.chartAirlyForecastIndex = document.getElementById("graphAirlyPrediction").getContext('2d');
+
+// PG
+initVC.dataFromPgCurrent = null;
+initVC.datasFromPgHistory = null;
+initVC.pm10ValuesFromPgHistory = [];
+initVC.pm25ValuesFromPgHistory = [];
+initVC.datasFromPgHistory = [];
+initVC.chartPgHistoryIndex = document.getElementById("graphPgHistoric").getContext('2d');
+
 
 initVC.init = function(){
-    const ps = new PerfectScrollbar('.informations');
+   // const ps = new PerfectScrollbar('.informations__airly');
+    $('.informations').each(function(){ const ps = new PerfectScrollbar($(this)[0]); });
 
-    var $historicCaqiBtn = $("#historicCaqiBtn");
-    var $historicPmBtn = $("#historicPmBtn");
-    var $historicTempBtn = $("#historicTempBtn");
-    var $predictionCaqiBtn = $("#predictionCaqiBtn");
-    var $predictionPmBtn = $("#predictionPmBtn");
+    var $menuBtn = $(".manu__item");
+    var $airlyMenuHistoricBtn = $(".menu-historic__item");
+    var $airlyMenuPredictionBtn = $(".menu-prediction__item");
 
-    $historicCaqiBtn.off('click').click(initVC.changeChartData);
-    $historicPmBtn.off('click').click(initVC.changeChartData);
-    $historicTempBtn.off('click').click(initVC.changeChartData);
-    $predictionCaqiBtn.off('click').click(initVC.changeChartData);
-    $predictionPmBtn.off('click').click(initVC.changeChartData);
+    $menuBtn.off('click').click(initVC.changeView);
+    $airlyMenuHistoricBtn.off('click').click(initVC.changeChartData);
+    $airlyMenuPredictionBtn.off('click').click(initVC.changeChartData);
 
     initVC.getDataFromAirly();
-    
+    initVC.getDataFromPgCurrent();
+    initVC.getDataFromPgHistoric();
 };
 
-initVC.setCurrentDate = function(){
-    var $currentDateName = $(".current-date__day-name");
-    var $currentDate = $(".current-date__day-date");
-    var $currentDescription = $(".row__rate");
-    var $currentDescriptionNumber = $(".row__rate-number");
-    var $currentPm10= $(".current_pm10").find(".current__value");
-    var $currentPm25= $(".current_pm25").find(".current__value");
-    var $currentPm1= $(".current_pm1").find(".current__value");
-    var $currentTemperature= $(".current_tem").find(".current__value");
-    var $currentPressure= $(".current_pres").find(".current__value");
-    var $currentHumidity= $(".current_hum").find(".current__value");
-    var day = moment(initVC.dataFromAirlyCurrent.fromDateTime, "YYYY-MM-DD HH:mm:ss");
-    var dayNameOfWeek = day.format('dddd').charAt(0).toUpperCase() + day.format('dddd').slice(1);
-    var dayDate = day.format('DD-MM-YYYY');
-    var rate = initVC.dataFromAirlyCurrent.indexes[0].description;
-    var rateValue = initVC.dataFromAirlyCurrent.indexes[0].value;
-    var pm10 = initVC.dataFromAirlyCurrent.values[2].value;
-    var pm25 = initVC.dataFromAirlyCurrent.values[1].value;
-    var pm1 = initVC.dataFromAirlyCurrent.values[0].value;
-    var temperature = initVC.dataFromAirlyCurrent.values[5].value;
-    var pressure = initVC.dataFromAirlyCurrent.values[3].value;
-    var humidity = initVC.dataFromAirlyCurrent.values[4].value;
 
-    $currentDateName.text("").text(dayNameOfWeek);
-    $currentDate.text("").text(dayDate);
-    $currentDescription.text("").text(rate);
-    $currentDescriptionNumber.text("").text(rateValue);
-    $currentPm10.text("").text(pm10);
-    $currentPm25.text("").text(pm25);
-    $currentPm1.text("").text(pm1);
-    $currentTemperature.text("").text(temperature);
-    $currentPressure.text("").text(pressure);
-    $currentHumidity.text("").text(humidity);
-}
+
+initVC.changeView = function(){
+    var btnType = $(this)[0];
+    $('.informations').css("display","none");
+    $('.informations__' + btnType.id).css("display","block");
+
+    $('.informations').each(function(){ const ps = new PerfectScrollbar($(this)[0]); });
+
+    switch (btnType.id) {
+        case 'airly':
+            break;
+        case 'pg':
+            break
+        case 'comparison':
+            break;
+        default:
+    }
+
+    $(".manu__item").removeClass("manu__item--selected");
+    $(this).addClass("manu__item--selected");
+};
 
 initVC.changeChartData = function(){
     var dataType = $(this)[0];
@@ -105,6 +102,67 @@ initVC.changeChartData = function(){
             break;
         default:
     }
+}
+
+initVC.setCurrentDateAirly = function(){
+    var $currentDateName = $(".informations__airly").find(".current-date__day-name");
+    var $currentDate = $(".informations__airly").find(".current-date__day-date");
+    var $currentDescription = $(".informations__airly").find(".row__rate");
+    var $currentDescriptionNumber = $(".informations__airly").find(".row__rate-number");
+    var $currentPm10= $(".informations__airly").find(".current_pm10").find(".current__value");
+    var $currentPm25= $(".informations__airly").find(".current_pm25").find(".current__value");
+    var $currentPm1= $(".informations__airly").find(".current_pm1").find(".current__value");
+    var $currentTemperature= $(".informations__airly").find(".current_tem").find(".current__value");
+    var $currentPressure= $(".informations__airly").find(".current_pres").find(".current__value");
+    var $currentHumidity= $(".informations__airly").find(".current_hum").find(".current__value");
+    var day = moment(initVC.dataFromAirlyCurrent.fromDateTime, "YYYY-MM-DD HH:mm:ss");
+    var dayNameOfWeek = day.format('dddd').charAt(0).toUpperCase() + day.format('dddd').slice(1);
+    var dayDate = day.format('DD-MM-YYYY');
+    var rate = initVC.dataFromAirlyCurrent.indexes[0].description;
+    var rateValue = initVC.dataFromAirlyCurrent.indexes[0].value;
+    var pm10 = initVC.dataFromAirlyCurrent.values[2].value;
+    var pm25 = initVC.dataFromAirlyCurrent.values[1].value;
+    var pm1 = initVC.dataFromAirlyCurrent.values[0].value;
+    var temperature = initVC.dataFromAirlyCurrent.values[5].value;
+    var pressure = initVC.dataFromAirlyCurrent.values[3].value;
+    var humidity = initVC.dataFromAirlyCurrent.values[4].value;
+
+    $currentDateName.text("").text(dayNameOfWeek);
+    $currentDate.text("").text(dayDate);
+    $currentDescription.text("").text(rate);
+    $currentDescriptionNumber.text("").text(rateValue);
+    $currentPm10.text("").text(pm10);
+    $currentPm25.text("").text(pm25);
+    $currentPm1.text("").text(pm1);
+    $currentTemperature.text("").text(temperature);
+    $currentPressure.text("").text(pressure);
+    $currentHumidity.text("").text(humidity);
+}
+
+initVC.setCurrentDatePg = function(){
+    var mydate = initVC.convertDate(initVC.dataFromPgCurrent["Stacja Testowa"].date);
+    var day = moment(new Date(mydate), "YYYY-MM-DD HH:mm:ss");   
+    var dayNameOfWeek = day.format('dddd').charAt(0).toUpperCase() + day.format('dddd').slice(1);
+    var dayDate = day.format('DD-MM-YYYY');
+    var $currentPm10= $(".informations__pg").find(".current_pm10").find(".current__value");
+    var $currentPm25= $(".informations__pg").find(".current_pm25").find(".current__value");
+
+    $(".informations__pg").find(".name__data").text("").text("PG");
+    $(".informations__pg").find(".current-date__day-name").text("").text(dayNameOfWeek);
+    $(".informations__pg").find(".current-date__day-date").text("").text(dayDate);
+    $currentPm10.text("").text(initVC.dataFromPgCurrent["Stacja Testowa"].pm10);
+    $currentPm25.text("").text(initVC.dataFromPgCurrent["Stacja Testowa"].pm25);
+};
+
+initVC.convertDate = function(date){
+    var day = date.substring(0, date.indexOf(' '));
+    var month = date.substring(date.indexOf(' ') + 1, date.indexOf(' ') + 4);
+    var montfCount = "stylutmarkwimajczelipsiewrzpazlisgru".indexOf(month) / 3 + 1;
+    if(montfCount<10){
+        montfCount="0"+montfCount;
+    }
+    var year = date.substring(date.indexOf(' ') + 5, date.indexOf(' ') + 9);
+    return year+"-"+montfCount+"-"+day;
 }
 
 initVC.createChartSelected = function(labels, data, data2, display){
@@ -184,7 +242,7 @@ initVC.getDataFromAirly = function(){
             initVC.datasFromAirlyForecast[i] = moment(initVC.dataFromAirlyForecast[i].fromDateTime).format('DD/MM HH:mm');
         });
 
-        initVC.setCurrentDate();
+        initVC.setCurrentDateAirly();
         initVC.createGraphHistoric(res);
     });
 }
@@ -193,19 +251,57 @@ initVC.createGraphHistoric = function(res){
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFromAirlyHistory, initVC.pm25ValuesFromAirlyHistory, initVC.pm10ValuesFromAirlyHistory, true);
     var lineChartDataPmHistoryForecast = initVC.createChartSelected(initVC.datasFromAirlyForecast, initVC.pm25ValuesFromAirlyForecast, initVC.pm10ValuesFromAirlyForecast, true);
 
-    initVC.chartHistory = new Chart(initVC.chartHistoryIndex, lineChartDataPmHistory);
-    initVC.chartForecast = new Chart(initVC.chartForecastIndex, lineChartDataPmHistoryForecast);
+    initVC.chartHistory = new Chart(initVC.chartAirlyHistoryIndex, lineChartDataPmHistory);
+    initVC.chartForecast = new Chart(initVC.chartAirlyForecastIndex, lineChartDataPmHistoryForecast);
+};
+
+initVC.createGraphHistoricPg = function(res){ 
+    var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFromPgHistory, initVC.pm25ValuesFromPgHistory, initVC.pm10ValuesFromPgHistory, true);
+   initVC.chartForecast = new Chart(initVC.chartPgHistoryIndex, lineChartDataPmHistory);
 };
 
 initVC.createChart = function(chartData, chartPlace){
     if(chartPlace == "history"){
         initVC.chartHistory.destroy();
-	    initVC.chartHistory = new Chart(initVC.chartHistoryIndex, chartData);
+	    initVC.chartHistory = new Chart(initVC.chartAirlyHistoryIndex, chartData);
     }
     else if(chartPlace == "forecast"){
         initVC.chartForecast.destroy();
-	    initVC.chartForecas = new Chart(initVC.chartForecastIndex, chartData);
+	    initVC.chartForecas = new Chart(initVC.chartAirlyForecastIndex, chartData);
     }
+}
+
+initVC.getDataFromPgCurrent = function(){
+    $.ajax({
+        url : "https://smogpg.firebaseio.com/stations.json",
+        dataType : "json"
+    })
+    .done(res => {
+        console.log("initVC.getDataFromPgCurrent");
+        console.log(res);
+        initVC.dataFromPgCurrent = res;
+        initVC.setCurrentDatePg();
+    });
+}
+
+initVC.getDataFromPgHistoric = function(){
+    $.ajax({
+        url : "https://smogpg.firebaseio.com/stations_history.json",
+        dataType : "json"
+    })
+    .done(res => {
+        initVC.dataFromPgHistory = res;
+        var i = 0;
+        var indexOfSecondValue = 0;
+        for (const [key, value] of Object.entries(initVC.dataFromPgHistory["Stacja Testowa"])) {
+            indexOfSecondValue = value.indexOf(',' ) + 2;
+            initVC.datasFromPgHistory[i] = moment(parseInt(key)).format('DD/MM HH:mm');
+            initVC.pm10ValuesFromPgHistory[i] = value.substring(0, value.indexOf(','));
+            initVC.pm25ValuesFromPgHistory[i] = value.substring(indexOfSecondValue, value.length);
+            i++;
+        }
+        initVC.createGraphHistoricPg();
+    });
 }
 
 initVC.init();
