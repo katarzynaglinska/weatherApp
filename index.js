@@ -8,16 +8,18 @@ initVC.dataFromAirlyHistory = null;
 initVC.dataFromAirlyForecast = null;
 initVC.pm10ValuesFromAirlyHistory = [];
 initVC.pm25ValuesFromAirlyHistory = [];
-initVC.airlyCaqiFromAirlyHistory = [];
+initVC.caqiFromAirlyHistory = [];
 initVC.temperatureFromAirlyHistory = [];
 initVC.datasFromAirlyHistory = [];
 initVC.pm10ValuesFromAirlyForecast = [];
 initVC.pm25ValuesFromAirlyForecast = [];
-initVC.airlyCaqiFromAirlyForecast = [];
+initVC.caqiFromAirlyForecast = [];
 initVC.datasFromAirlyForecast = [];
 initVC.chartHistory;
+initVC.chartHistoryMinMax;
 initVC.chartForecast;
 initVC.chartAirlyHistoryIndex = document.getElementById("graphAirlyHistoric").getContext('2d');
+initVC.chartAirlyHistoryIndexMinMax = document.getElementById("graphAirlyHistoricMinMax").getContext('2d');
 initVC.chartAirlyForecastIndex = document.getElementById("graphAirlyPrediction").getContext('2d');
 
 // PG
@@ -37,7 +39,7 @@ initVC.init = function(){
     var $airlyMenuHistoricBtn = $(".menu-historic__item");
     var $airlyMenuPredictionBtn = $(".menu-prediction__item");
 
-    $menuBtn.off('click').click(initVC.changeView);
+    $menuBtn.off('click').click(initVC.changeView);  
     $airlyMenuHistoricBtn.off('click').click(initVC.changeChartData);
     $airlyMenuPredictionBtn.off('click').click(initVC.changeChartData);
 
@@ -81,7 +83,7 @@ initVC.changeChartData = function(){
     }
     switch (dataType.id) {
         case 'historicCaqiBtn':
-            var lineChartDataCaqiHistory = initVC.createChartSelected(initVC.datasFromAirlyHistory, initVC.airlyCaqiFromAirlyHistory, false, false);
+            var lineChartDataCaqiHistory = initVC.createChartSelected(initVC.datasFromAirlyHistory, initVC.caqiFromAirlyHistory, false, false);
             initVC.createChart(lineChartDataCaqiHistory, "history");
             break;
         case 'historicPmBtn':
@@ -93,7 +95,7 @@ initVC.changeChartData = function(){
             initVC.createChart(lineChartDataTempHistory, "history");
             break;
         case 'predictionCaqiBtn':
-            var lineChartDataCaqiForecast = initVC.createChartSelected(initVC.datasFromAirlyForecast, initVC.airlyCaqiFromAirlyForecast, false, false);
+            var lineChartDataCaqiForecast = initVC.createChartSelected(initVC.datasFromAirlyForecast, initVC.caqiFromAirlyForecast, false, false);
             initVC.createChart(lineChartDataCaqiForecast, "forecast");
             break;
         case 'predictionPmBtn':
@@ -104,7 +106,7 @@ initVC.changeChartData = function(){
     }
 }
 
-initVC.setCurrentDateAirly = function(){
+initVC.setCurrentDataAirly = function(){
     var $currentDateName = $(".informations__airly").find(".current-date__day-name");
     var $currentDate = $(".informations__airly").find(".current-date__day-date");
     var $currentDescription = $(".informations__airly").find(".row__rate");
@@ -224,12 +226,12 @@ initVC.getDataFromAirly = function(){
     .done(res => {
         console.log(res);
         initVC.dataFromAirlyCurrent = res.current;
-        initVC.dataFromAirlyForecast = res.forecast;
         initVC.dataFromAirlyHistory = res.history;
+        initVC.dataFromAirlyForecast = res.forecast;
         initVC.dataFromAirlyHistory.forEach(function (value, i) {
             initVC.pm10ValuesFromAirlyHistory[i] = initVC.dataFromAirlyHistory[i].values[2].value;
             initVC.pm25ValuesFromAirlyHistory[i] = initVC.dataFromAirlyHistory[i].values[1].value;
-            initVC.airlyCaqiFromAirlyHistory[i] = initVC.dataFromAirlyHistory[i].indexes[0].value;
+            initVC.caqiFromAirlyHistory[i] = initVC.dataFromAirlyHistory[i].indexes[0].value;
             initVC.temperatureFromAirlyHistory[i] = initVC.dataFromAirlyHistory[i].values[5].value;
 
             initVC.datasFromAirlyHistory[i] = moment(initVC.dataFromAirlyHistory[i].fromDateTime).format('DD/MM HH:mm');
@@ -237,15 +239,71 @@ initVC.getDataFromAirly = function(){
         initVC.dataFromAirlyForecast.forEach(function (value, i) {
             initVC.pm10ValuesFromAirlyForecast[i] = initVC.dataFromAirlyForecast[i].values[0].value;
             initVC.pm25ValuesFromAirlyForecast[i] = initVC.dataFromAirlyForecast[i].values[1].value;
-            initVC.airlyCaqiFromAirlyForecast[i] = initVC.dataFromAirlyForecast[i].indexes[0].value;
+            initVC.caqiFromAirlyForecast[i] = initVC.dataFromAirlyForecast[i].indexes[0].value;
 
             initVC.datasFromAirlyForecast[i] = moment(initVC.dataFromAirlyForecast[i].fromDateTime).format('DD/MM HH:mm');
         });
 
-        initVC.setCurrentDateAirly();
+        initVC.setCurrentDataAirly();
         initVC.createGraphHistoric(res);
+        initVC.createGraphHistoricMinMax(res);
     });
 }
+
+initVC.createGraphHistoricMinMax = function(res){ 
+    const arrMin = arr => Math.min(...arr);
+    const arrMax = arr => Math.max(...arr);
+    const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
+    var minCaquiHistory = arrMin(initVC.caqiFromAirlyHistory);
+    var minCaquiHistoryIndex = initVC.caqiFromAirlyHistory.indexOf(minCaquiHistory);
+    var maxCaquiHistory = arrMax(initVC.caqiFromAirlyHistory);
+    var maxCaquiHistoryIndex = initVC.caqiFromAirlyHistory.indexOf(maxCaquiHistory);
+    var avgCaquiHistory = arrAvg(initVC.caqiFromAirlyHistory).toFixed(2);;
+    var minArray = Array(initVC.caqiFromAirlyHistory.length).fill(null);    
+    var maxArray = Array(initVC.caqiFromAirlyHistory.length).fill(null); 
+    var avgArray = Array(initVC.caqiFromAirlyHistory.length).fill(avgCaquiHistory); 
+    minArray[minCaquiHistoryIndex] = minCaquiHistory;
+    maxArray[maxCaquiHistoryIndex] = maxCaquiHistory;
+
+    console.log("minCaquiHistoryIndex " + minCaquiHistoryIndex)
+    var chart;
+    chart = {
+        type: 'line',
+        data: {
+            datasets: [
+                 {
+                label: 'Wartość średnia',
+                data: avgArray,
+                fill: false,
+                // Changes this dataset to become a line
+                type: 'line'
+            },
+            {
+                label: 'Maximum',
+                backgroundColor: "rgb(48, 134, 204)",
+                pointBackgroundColor: "rgb(48, 134, 204)",
+                pointBorderColor: "#55bae7",
+                data: maxArray
+              },
+              {
+                label: 'Minimum',
+                backgroundColor: "#18e02a",
+                pointBackgroundColor: "#18e02a",
+                pointBorderColor: "#18e02a",
+                data: minArray
+              },],
+            labels: initVC.datasFromAirlyHistory
+        },
+        options: {
+            legend: {
+                display: true
+            }
+        }
+    };
+    initVC.chartHistoryMinMax = new Chart(initVC.chartAirlyHistoryIndexMinMax, chart);
+
+}
+
 
 initVC.createGraphHistoric = function(res){ 
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFromAirlyHistory, initVC.pm25ValuesFromAirlyHistory, initVC.pm10ValuesFromAirlyHistory, true);
@@ -290,6 +348,8 @@ initVC.getDataFromPgHistoric = function(){
         dataType : "json"
     })
     .done(res => {
+        console.log("initVC.getDataFromPgHistoric");
+        console.log(res);
         initVC.dataFromPgHistory = res;
         var i = 0;
         var indexOfSecondValue = 0;
