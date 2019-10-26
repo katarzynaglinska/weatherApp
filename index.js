@@ -28,6 +28,7 @@ initVC.datasFromPgHistory = null;
 initVC.pm10ValuesFromPgHistory = [];
 initVC.pm25ValuesFromPgHistory = [];
 initVC.datasFromPgHistory = [];
+initVC.chartPgHistory;
 initVC.chartPgHistoryIndex = document.getElementById("graphPgHistoric").getContext('2d');
 
 
@@ -243,6 +244,10 @@ initVC.getDataFromAirly = function(){
 
             initVC.datasFromAirlyForecast[i] = moment(initVC.dataFromAirlyForecast[i].fromDateTime).format('DD/MM HH:mm');
         });
+        initVC.pm10ValuesFromAirlyForecast = initVC.pm10ValuesFromAirlyForecast.slice(0,8);
+        initVC.pm25ValuesFromAirlyForecast = initVC.pm25ValuesFromAirlyForecast.slice(0,8);
+        initVC.caqiFromAirlyForecast = initVC.caqiFromAirlyForecast.slice(0,8);
+        initVC.datasFromAirlyForecast = initVC.datasFromAirlyForecast.slice(0,8);
 
         initVC.setCurrentDataAirly();
         initVC.createGraphHistoric(res);
@@ -315,7 +320,7 @@ initVC.createGraphHistoric = function(res){
 
 initVC.createGraphHistoricPg = function(res){ 
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFromPgHistory, initVC.pm25ValuesFromPgHistory, initVC.pm10ValuesFromPgHistory, true);
-   initVC.chartForecast = new Chart(initVC.chartPgHistoryIndex, lineChartDataPmHistory);
+    initVC.chartPgHistory = new Chart(initVC.chartPgHistoryIndex, lineChartDataPmHistory);
 };
 
 initVC.createChart = function(chartData, chartPlace){
@@ -326,6 +331,7 @@ initVC.createChart = function(chartData, chartPlace){
     else if(chartPlace == "forecast"){
         initVC.chartForecast.destroy();
 	    initVC.chartForecas = new Chart(initVC.chartAirlyForecastIndex, chartData);
+        console.log(initVC.chartForecas);
     }
 }
 
