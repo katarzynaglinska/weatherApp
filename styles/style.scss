@@ -65,7 +65,7 @@ body{
     height: 69px;
     padding-top: 20px;
     position: absolute;
-    top: 100px;
+    top: 130px;
     left: 0px;
     right: 0px;
 
@@ -105,7 +105,7 @@ body{
     position: absolute;
     left: 0px;
     right: 0px;
-    top: 170px;
+    top: 200px;
     bottom: 0px;
 
     .informations{
@@ -115,7 +115,7 @@ body{
         overflow-y: scroll;
         position: relative;
 
-        &__pg{
+        &__second-city{
             display: none;
         }
 
@@ -154,7 +154,7 @@ body{
         padding-top: 15px;
     }
 
-    &--currentpg{
+    &--currentsecond{
         height: 80px;
         padding-top: 15px;
     }
@@ -169,38 +169,44 @@ body{
     font-weight: bold;
 }
 
-.row{
+.row {
     height: 100%;
-}
-
-.row__rate-number{
-    float: left;
-    min-width: 30px;
-    padding: 3px;
-    text-align: center;
-    border: 2px #18e02a solid;
-    border-radius: 5px;
-    color: #18e02a;
-}
-
-.row__rate{
-    padding-left: 10px;
-    padding-top: 3px;
-    float: left;
-}
-
-.row__current{
-    &--half{
+  
+    &__rate-number{
+      float: left;
+      min-width: 30px;
+      padding: 3px;
+      text-align: center;
+      border: 2px #18e02a solid;
+      border-radius: 5px;
+      color: #18e02a;
+    }
+  
+    &__rate {
+      padding-left: 10px;
+      padding-top: 3px;
+      float: left;
+    }
+  
+    &__current {
+      &--half {
         float: left;
         width: 50%;
+      }
     }
-}
-
-.row_name{
-    font-size: 18px;
-    font-weight: 800;
-    padding-bottom: 7px;
-}
+  
+    &_name {
+      font-size: 18px;
+      font-weight: 800;
+      padding-bottom: 7px;
+    }
+  
+    &__menu-prediction {
+      width: 100%;
+      height: 24px;
+      background-color: #e4dddd;
+    }
+  }
 
 .current{
     color: #585353;
@@ -221,21 +227,30 @@ body{
     height: 230px;
 }
 
-.row__menu-historic{
+.row__menu-historic, .row__menu-prediction, .row__menu-historic-comparison{
     width: 100%;
     height: 24px;
     background-color: #e4dddd;
 }
 
-.row__menu-prediction{
-    width: 100%;
-    height: 24px;
-    background-color: #e4dddd;
-  }
-
-
-.menu-historic__item{
+.menu-historic__item, .menu-historic-second__item, .menu-historic-comp__item{
     width: 33%;
+    float: left;
+    text-align: center;
+    border-top: 2px #ccc2c2 solid;
+
+    &--selected{
+        border-top: 2px #878d90 solid;
+        background-color: #f9f2f3;
+    }
+
+    &--25{
+        width: 25%;
+    }
+}
+
+.menu-prediction__item, .menu-prediction-second__item{
+    width: 50%;
     float: left;
     text-align: center;
     border-top: 2px #ccc2c2 solid;
@@ -246,8 +261,8 @@ body{
     }
 }
 
-.menu-prediction__item{
-    width: 50%;
+.menu-prediction-comp__item{
+    width: 33.3%;
     float: left;
     text-align: center;
     border-top: 2px #ccc2c2 solid;
@@ -261,4 +276,25 @@ body{
 #mapid{
     width: 100%; 
     height:100%
+}
+
+.choose-city{
+    height: 35px;
+    &__title{
+        width: 130px;
+        float: left;
+        margin-top: 7px;
+
+        &--second{
+            width: 110px;
+        }
+    }
+    &__select{
+        width: 150px;
+        float: left;
+    }
+}
+
+.choose-city-second{
+    height: 35px;
 }

@@ -1,54 +1,78 @@
-/*function initMap() {
-    var locations = [
-  ['Politechnika Gdańska', 54.3715969, 18.6152441,18, 2],
-  ['Czujnik AIRLY', 54.37333, 18.61919, 1]
-];
-
-var map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 10,
-  center: new google.maps.LatLng(54.3715969, 18.6152441,18),
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-});
-
-var infowindow = new google.maps.InfoWindow();
-
-var marker, i;
-
-for (i = 0; i < locations.length; i++) {  
-  marker = new google.maps.Marker({
-    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-    map: map
-  });
-
-  console.log(marker);
-  google.maps.event.addListener(marker, 'click', (function(marker, i) {
-    return function() {
-      infowindow.setContent(locations[i][0]);
-      infowindow.open(map, marker);
-    }
-  })(marker, i));
-}
-};
-*/
-
 //new map 
 
-var places = [
-  ["Politechnika Gdańska", 54.3710693, 18.617631],
-  ["AIRLY",54.37333, 18.61919]
-  ];
+var map = L.map('mapid').setView([52.22966, 18.97295], 5);
+var marker = new Array();
+var markerAll = new Array();
 
-var map = L.map('mapid').setView([54.3720693, 18.618631], 16);
-mapLink = 
-    '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; ' + mapLink + ' Contributors',
-    maxZoom:25
-    }).addTo(map);
+function initializeMap() {
+  var places = [
+    ["GDAŃSK", 54.37108, 18.61796],
+    ["GDYNIA",54.5196057, 18.53524]
+    ];
 
-for (var i = 0; i < places.length; i++) {
-  marker = new L.marker([places[i][1],places[i][2]])
-            .bindPopup(places[i][0])
-    .addTo(map);
+  mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+  L.tileLayer(
+      'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + mapLink + ' Contributors',
+      maxZoom:25
+      }).addTo(map);
+
+  for (var i = 0; i < places.length; i++) {
+    marker = new L.marker([places[i][1],places[i][2]])
+              .bindPopup(places[i][0])
+              .addTo(map);
+    markerAll.push(marker);
+  }
 }
+
+function initializeMapChange() {
+  var chosenCityFirst = $("#selectFirstCity")[0].value;
+  var chosenCitySecond = $("#selectSecondCity")[0].value;
+  var tabCities = [chosenCityFirst , chosenCitySecond];
+  var lat, lng, name;
+  var places = new Array();
+  for(var i=0; i<2;i++){
+    switch (tabCities[i]) {
+      case '0':
+          lat = 54.37108;
+          lng = 18.61796;
+          name = "Gdańsk";
+          break;
+      case '1':
+          lat = 54.5196057;
+          lng = 18.53524;
+          name = "Gdynia";
+          break
+      case '2':
+          lat = 52.22966;
+          lng = 20.97295;
+          name = "Warszawa";
+          break;
+      case '3':
+          lat = 50.05456;
+          lng = 19.942218;
+          name = "Kraków";
+          break;
+      default: break;
+    }
+    places.push([name,lat,lng]);
+  }
+  for(i=0;i<markerAll.length;i++) {
+      map.removeLayer(markerAll[i]);
+  }
+  for (var i = 0; i < places.length; i++) {
+    marker = new L.marker([places[i][1],places[i][2]])
+              .bindPopup(places[i][0])
+      .addTo(map);
+    markerAll.push(marker);
+  }
+  
+}
+
+var $selectFirst = $("#selectFirstCity");
+var $selectSecond = $("#selectSecondCity");
+
+$selectFirst.change(initializeMapChange);
+$selectSecond.change(initializeMapChange);
+
+initializeMap();

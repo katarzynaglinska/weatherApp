@@ -57,7 +57,7 @@ body {
   height: 69px;
   padding-top: 20px;
   position: absolute;
-  top: 100px;
+  top: 130px;
   left: 0px;
   right: 0px;
 }
@@ -93,7 +93,7 @@ body {
   position: absolute;
   left: 0px;
   right: 0px;
-  top: 170px;
+  top: 200px;
   bottom: 0px;
 }
 .content .informations {
@@ -103,7 +103,7 @@ body {
   overflow-y: scroll;
   position: relative;
 }
-.content .informations__pg {
+.content .informations__second-city {
   display: none;
 }
 .content .informations__comparison {
@@ -138,7 +138,7 @@ body {
   height: 167px;
   padding-top: 15px;
 }
-.informations__row--currentpg {
+.informations__row--currentgdy {
   height: 80px;
   padding-top: 15px;
 }
@@ -155,7 +155,6 @@ body {
 .row {
   height: 100%;
 }
-
 .row__rate-number {
   float: left;
   min-width: 30px;
@@ -165,22 +164,24 @@ body {
   border-radius: 5px;
   color: #18e02a;
 }
-
 .row__rate {
   padding-left: 10px;
   padding-top: 3px;
   float: left;
 }
-
 .row__current--half {
   float: left;
   width: 50%;
 }
-
 .row_name {
   font-size: 18px;
   font-weight: 800;
   padding-bottom: 7px;
+}
+.row__menu-prediction {
+  width: 100%;
+  height: 24px;
+  background-color: #e4dddd;
 }
 
 .current {
@@ -202,36 +203,44 @@ body {
   height: 230px;
 }
 
-.row__menu-historic {
+.row__menu-historic, .row__menu-prediction, .row__menu-historic-comparison {
   width: 100%;
   height: 24px;
   background-color: #e4dddd;
 }
 
-.row__menu-prediction {
-  width: 100%;
-  height: 24px;
-  background-color: #e4dddd;
-}
-
-.menu-historic__item {
+.menu-historic__item, .menu-historic-gdy__item, .menu-historic-comp__item {
   width: 33%;
   float: left;
   text-align: center;
   border-top: 2px #ccc2c2 solid;
 }
-.menu-historic__item--selected {
+.menu-historic__item--selected, .menu-historic-gdy__item--selected, .menu-historic-comp__item--selected {
   border-top: 2px #878d90 solid;
   background-color: #f9f2f3;
 }
+.menu-historic__item--25, .menu-historic-gdy__item--25, .menu-historic-comp__item--25 {
+  width: 25%;
+}
 
-.menu-prediction__item {
+.menu-prediction__item, .menu-prediction-gdy__item {
   width: 50%;
   float: left;
   text-align: center;
   border-top: 2px #ccc2c2 solid;
 }
-.menu-prediction__item--selected {
+.menu-prediction__item--selected, .menu-prediction-gdy__item--selected {
+  border-top: 2px #878d90 solid;
+  background-color: #f9f2f3;
+}
+
+.menu-prediction-comp__item {
+  width: 33.3%;
+  float: left;
+  text-align: center;
+  border-top: 2px #ccc2c2 solid;
+}
+.menu-prediction-comp__item--selected {
   border-top: 2px #878d90 solid;
   background-color: #f9f2f3;
 }
@@ -239,6 +248,26 @@ body {
 #mapid {
   width: 100%;
   height: 100%;
+}
+
+.choose-city {
+  height: 35px;
+}
+.choose-city__title {
+  width: 130px;
+  float: left;
+  margin-top: 7px;
+}
+.choose-city__title--second {
+  width: 110px;
+}
+.choose-city__select {
+  width: 150px;
+  float: left;
+}
+
+.choose-city-second {
+  height: 35px;
 }
 
 /*# sourceMappingURL=style.css.map */
