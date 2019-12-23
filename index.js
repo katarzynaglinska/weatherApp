@@ -59,17 +59,14 @@ initVC.chartForecastIndexComp = document.getElementById("graphPredictionComp").g
 initVC.init = function(){
     var urlGda = "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
     var urlGdy = "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.5196057&lng=18.53524&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
-    $('.informations').each(function(){ const ps = new PerfectScrollbar($(this)[0]); });
-
-
+    //$('.informations').each(function(){ const ps = new PerfectScrollbar($(this)[0]); });
     var $menuBtn = $(".manu__item");
     $menuBtn.off('click').click(initVC.changeView);  
 
-
     var $selectFirst = $("#selectFirstCity");
     var $selectSecond = $("#selectSecondCity");
-    var $airlyMenuHistoricBtn = $(".menu-historic__item");
-    var $airlyMenuPredictionBtn = $(".menu-prediction__item");
+    var $menuHistoricBtn = $(".menu-historic__item");
+    var $menuPredictionBtn = $(".menu-prediction__item");
     var $menuHistoricBtnGdy = $(".menu-historic-second__item");
     var $menuPredictionBtnGdy = $(".menu-prediction-second__item");
     var $MenuHistoricBtnComp = $(".menu-historic-comp__item");
@@ -77,15 +74,15 @@ initVC.init = function(){
 
     $selectSecond.val(1);
     $menuBtn.off('click').click(initVC.changeView);  
-    $airlyMenuHistoricBtn.off('click').click(initVC.changeChartData);
-    $airlyMenuPredictionBtn.off('click').click(initVC.changeChartData);
+    $menuHistoricBtn.off('click').click(initVC.changeChartData);
+    $menuPredictionBtn.off('click').click(initVC.changeChartData);
     $menuHistoricBtnGdy.off('click').click(initVC.changeChartData);
     $menuPredictionBtnGdy.off('click').click(initVC.changeChartData);
     $MenuHistoricBtnComp.off('click').click(initVC.changeChartData);
     $menuPredictionBtnComp.off('click').click(initVC.changeChartData);
 
-    initVC.getDataFromAirly(urlGda);
-    initVC.getDataFromPgCurrent(urlGdy);
+    initVC.getDataFromFirstCity(urlGda);
+    initVC.getDataFromSecondCity(urlGdy);
 
     $selectFirst.change(initVC.changeCity);
     $selectSecond.change(initVC.changeCity);
@@ -101,9 +98,6 @@ initVC.init = function(){
 initVC.createChartComparisonInit = function(){
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFirstCityHistory, initVC.caqiFirstCityHistory, initVC.caqiSecondCityHistory, true, 'bar', initVC.firstCity, initVC.secondCity);
     var lineChartDataPmHistoryForecast = initVC.createChartSelected(initVC.datasSecondCityForecast, initVC.pm25FirstCityForecast, initVC.pm25SecondCityForecast, true, 'line', initVC.firstCity, initVC.secondCity);
-
-    console.log(initVC.datasSecondCityForecast);
-
     initVC.destroyChart(initVC.chartHistoryComp);
     initVC.destroyChart(initVC.chartForecastComp);
     initVC.chartHistoryComp = new Chart(initVC.chartHistoryIndexComp, lineChartDataPmHistory);
@@ -124,13 +118,13 @@ initVC.changeCity = function(type){
             url = "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=52.22966&lng=20.97295&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
             break;
         case '3':
-            url = "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=50.05456&lng=19.942218&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
+            url = "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=50.0664&lng=19.9651&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
             break;
         default: break;
     }
     var selectedCity = this.options[this.selectedIndex].text;
     if($(this)[0].id == "selectFirstCity"){
-        initVC.getDataFromAirly(url);
+        initVC.getDataFromFirstCity(url);
         initVC.firstCity = selectedCity.toUpperCase();
         $("#first-city").text(selectedCity.toUpperCase());
         $(".name__data-first").text(selectedCity.toUpperCase());
@@ -141,7 +135,7 @@ initVC.changeCity = function(type){
         }, 3000);
     }
     else if($(this)[0].id == "selectSecondCity"){
-        initVC.getDataFromPgCurrent(url);
+        initVC.getDataFromSecondCity(url);
         initVC.secondCity = selectedCity.toUpperCase();
         $("#second-city").text(selectedCity.toUpperCase());
         $(".name__data-second").text(selectedCity.toUpperCase());
@@ -157,9 +151,6 @@ initVC.changeView = function(){
     var btnType = $(this)[0];
     $('.informations').css("display","none");
     $('.informations__' + btnType.id).css("display","block");
-
-    $('.informations').each(function(){ const ps = new PerfectScrollbar($(this)[0]); });
-
     $(".manu__item").removeClass("manu__item--selected");
     $(this).addClass("manu__item--selected");
 };
@@ -195,44 +186,44 @@ initVC.changeChartData = function(){
     switch (dataType.id) {
         case 'historicCaqiBtn':
             data = initVC.createChartSelected(initVC.datasFirstCityHistory, initVC.caqiFirstCityHistory, false, false, 'bar');
-            initVC.createChart(data, "history");
+            initVC.createChartFirstCity(data, "history");
             break;
         case 'historicPmBtn':
             data = initVC.createChartSelected(initVC.datasFirstCityHistory, initVC.pm25FirstCityHistory, initVC.pm10FirstCityHistory, true, 'line', 'PM25', 'PM10');
-            initVC.createChart(data, "history");
+            initVC.createChartFirstCity(data, "history");
             break
         case 'historicTempBtn':
             data = initVC.createChartSelected(initVC.datasFirstCityHistory, initVC.temperatureFirstCityHistory, false, false, 'bar');
-            initVC.createChart(data, "history");
+            initVC.createChartFirstCity(data, "history");
             break;
         case 'predictionCaqiBtn':
             data = initVC.createChartSelected(initVC.datasFirstCityForecast, initVC.caqiFirstCityForecast, false, false, 'bar');
-            initVC.createChart(data, "forecast");
+            initVC.createChartFirstCity(data, "forecast");
             break;
         case 'predictionPmBtn':
             data = initVC.createChartSelected(initVC.datasFirstCityForecast, initVC.pm25FirstCityForecast, initVC.pm10FirstCityForecast, true, 'line', 'PM25', 'PM10');
-            initVC.createChart(data, "forecast");
+            initVC.createChartFirstCity(data, "forecast");
             break;
-        //test second
+        //second
         case 'historicCaqiBtnSecond':
             data = initVC.createChartSelected(initVC.datasSecondCityHistory, initVC.caqiSecondCityHistory, false, false, 'bar');
-            initVC.createChartGdy(data, "history");
+            initVC.createChartSecondCity(data, "history");
             break;
         case 'historicPmBtnSecond':
             data = initVC.createChartSelected(initVC.datasSecondCityHistory, initVC.pm25SecondCityHistory, initVC.pm10SecondCityHistory, true, 'line', 'PM25', 'PM10');
-            initVC.createChartGdy(data, "history");
+            initVC.createChartSecondCity(data, "history");
             break
         case 'historicTempBtnSecond':
             data = initVC.createChartSelected(initVC.datasSecondCityHistory, initVC.temperatureSecondCityHistoryy, false, false, 'bar');
-            initVC.createChartGdy(data, "history");
+            initVC.createChartSecondCity(data, "history");
             break;
         case 'predictionCaqiBtnSecond':
             data = initVC.createChartSelected(initVC.datasSecondCityForecast, initVC.caqiSecondCityForecast, false, false, 'bar');
-            initVC.createChartGdy(data, "forecast");
+            initVC.createChartSecondCity(data, "forecast");
             break;
         case 'predictionPmBtnSecond':
             data = initVC.createChartSelected(initVC.datasSecondCityForecast, initVC.pm25SecondCityForecast, initVC.pm10SecondCityForecast, true, 'line', 'PM25', 'PM10');
-            initVC.createChartGdy(data, "forecast");
+            initVC.createChartSecondCity(data, "forecast");
             break;
         // comparison
         case 'historicCaqiCompBtn':
@@ -267,7 +258,7 @@ initVC.changeChartData = function(){
     }
 }
 
-initVC.setCurrentDataAirly = function(){
+initVC.setCurrentDataFirstCity = function(){
     var $currentDateName = $(".informations__first-city").find(".current-date__day-name");
     var $currentDate = $(".informations__first-city").find(".current-date__day-date");
     var $currentDescription = $(".informations__first-city").find(".row__rate");
@@ -302,7 +293,7 @@ initVC.setCurrentDataAirly = function(){
     $currentHumidity.text("").text(humidity);
 }
 
-initVC.setCurrentDataGdy = function(){
+initVC.setCurrentDataSecondCity = function(){
     var $currentDateName = $(".informations__second-city").find(".current-date__day-name");
     var $currentDate = $(".informations__second-city").find(".current-date__day-date");
     var $currentDescription = $(".informations__second-city").find(".row__rate");
@@ -336,21 +327,6 @@ initVC.setCurrentDataGdy = function(){
     $currentPressure.text("").text(pressure);
     $currentHumidity.text("").text(humidity);
 }
-
-initVC.setCurrentDatePg = function(){
-    var mydate = initVC.convertDate(initVC.dataFromPgCurrent["Stacja Testowa"].date);
-    var day = moment.utc(new Date(mydate), "YYYY-MM-DD HH:mm:ss");   
-    var dayNameOfWeek = day.format('dddd').charAt(0).toUpperCase() + day.format('dddd').slice(1);
-    var dayDate = day.format('DD-MM-YYYY');
-    var $currentPm10= $(".informations_second-city").find(".current_pm10").find(".current__value");
-    var $currentPm25= $(".informations__second-city").find(".current_pm25").find(".current__value");
-
-    $(".informations__second-city").find(".name__data").text("").text("PG");
-    $(".informations__second-city").find(".current-date__day-name").text("").text(dayNameOfWeek);
-    $(".informations__second-city").find(".current-date__day-date").text("").text(dayDate);
-    $currentPm10.text("").text(initVC.dataFromPgCurrent["Stacja Testowa"].pm10);
-    $currentPm25.text("").text(initVC.dataFromPgCurrent["Stacja Testowa"].pm25);
-};
 
 initVC.convertDate = function(date){
     var day = date.substring(0, date.indexOf(' '));
@@ -415,9 +391,8 @@ initVC.createChartSelected = function(labels, data, data2, display, type, label1
     return chart;
 }
 
-initVC.getDataFromAirly = function(url){
+initVC.getDataFromFirstCity = function(url){
     $.ajax({
-        //url : "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y",
        url : url,
        dataType : "json"
     })
@@ -442,14 +417,10 @@ initVC.getDataFromAirly = function(url){
 
             initVC.datasFirstCityForecast[i] = moment.utc(initVC.dataFirstCityForecast[i].fromDateTime).format('DD/MM HH:mm');
         });
-        //initVC.pm10FirstCityForecast = initVC.pm10FirstCityForecast.slice(0,8);
-        //initVC.pm25FirstCityForecast = initVC.pm25FirstCityForecast.slice(0,8);
-        //initVC.caqiFirstCityForecast = initVC.caqiFirstCityForecast.slice(0,8);
-        //initVC.datasFirstCityForecast = initVC.datasFirstCityForecast.slice(0,8);
 
-        initVC.setCurrentDataAirly();
-        initVC.createGraphHistoric(res);
-        initVC.createGraphHistoricMinMax("gda");
+        initVC.setCurrentDataFirstCity();
+        initVC.createGraphHistoricFirstCity(res);
+        initVC.createGraphHistoricMinMax("first");
     });
 }
 
@@ -458,7 +429,7 @@ initVC.createGraphHistoricMinMax = function(type){
     const arrMax = arr => Math.max(...arr);
     const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
     var minCaquiHistory, minCaquiHistoryIndex, maxCaquiHistory, maxCaquiHistoryIndex, avgCaquiHistory, minArray, maxArray;
-    if(type == "gda" ){
+    if(type == "first" ){
         minCaquiHistory = arrMin(initVC.caqiFirstCityHistory);
         minCaquiHistoryIndex = initVC.caqiFirstCityHistory.indexOf(minCaquiHistory);
         maxCaquiHistory = arrMax(initVC.caqiFirstCityHistory);
@@ -584,7 +555,7 @@ initVC.createGraphHistoricMinMax = function(type){
             }
         }
     };
-    if(type == "gda"){
+    if(type == "first"){
         initVC.destroyChart(initVC.chartHistoryMinMax);
         initVC.chartHistoryMinMax = new Chart(initVC.chartFirstCityHistoryIndexMinMax, chart);
     }
@@ -599,7 +570,7 @@ initVC.createGraphHistoricMinMax = function(type){
 }
 
 
-initVC.createGraphHistoric = function(res){ 
+initVC.createGraphHistoricFirstCity = function(res){ 
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFirstCityHistory, initVC.pm25FirstCityHistory, initVC.pm10FirstCityHistory, true, 'line', 'PM25', 'PM10');
     var lineChartDataPmHistoryForecast = initVC.createChartSelected(initVC.datasFirstCityForecast, initVC.pm25FirstCityForecast, initVC.pm10FirstCityForecast, true, 'line', 'PM25', 'PM10');
 
@@ -609,7 +580,7 @@ initVC.createGraphHistoric = function(res){
     initVC.chartForecast = new Chart(initVC.chartFirstCityForecastIndex, lineChartDataPmHistoryForecast);
 };
 
-initVC.createGraphHistoricGdy = function(res){ 
+initVC.createGraphHistoricSecondCity = function(res){ 
     var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasSecondCityHistory, initVC.pm25SecondCityHistory, initVC.pm10SecondCityHistory, true, 'line', 'PM25', 'PM10');
     var lineChartDataPmHistoryForecast = initVC.createChartSelected(initVC.datasSecondCityForecast, initVC.pm25SecondCityForecast, initVC.pm10SecondCityForecast, true, 'line', 'PM25', 'PM10');
 
@@ -619,20 +590,13 @@ initVC.createGraphHistoricGdy = function(res){
     initVC.chartForecastSecond = new Chart(initVC.chartSecondCityForecastIndex, lineChartDataPmHistoryForecast);
 };
 
-initVC.createGraphHistoricPg = function(res){ 
-    var lineChartDataPmHistory = initVC.createChartSelected(initVC.datasFromPgHistory, initVC.pm25ValuesFromPgHistory, initVC.pm10ValuesFromPgHistory, true, 'line', 'PM25', 'PM10');
-   
-    initVC.destroyChart(initVC.chartPgHistory);
-    initVC.chartPgHistory = new Chart(initVC.chartPgHistoryIndex, lineChartDataPmHistory);
-};
-
 initVC.destroyChart = function(chart){
     if(chart != undefined){
         chart.destroy();
     }
 }
 
-initVC.createChart = function(chartData, chartPlace){
+initVC.createChartFirstCity = function(chartData, chartPlace){
     if(chartPlace == "history"){
         initVC.chartHistory.destroy();
 	    initVC.chartHistory = new Chart(initVC.chartFirstCityHistoryIndex, chartData);
@@ -643,7 +607,7 @@ initVC.createChart = function(chartData, chartPlace){
     }
 }
 
-initVC.createChartGdy = function(chartData, chartPlace){
+initVC.createChartSecondCity = function(chartData, chartPlace){
     if(chartPlace == "history"){
         initVC.chartHistorySecond.destroy();
 	    initVC.chartHistorySecond = new Chart(initVC.chartSecondCityHistoryIndex, chartData);
@@ -665,15 +629,23 @@ initVC.createChartComparison = function(chartData, chartPlace){
     }
 }
 
-initVC.getDataFromPgCurrent = function(url){
+initVC.getData = function(url){
     $.ajax({
         url : url,
         dataType : "json"
     })
     .done(res => {
-        console.log("Another city: ");
-        console.log(res);
+        this.buildList(res)
+    })
+    .fail(function(error) { console.log(error) });
+}
 
+initVC.getDataFromSecondCity = function(url){
+    $.ajax({
+        url : url,
+        dataType : "json"
+    })
+    .done(res => {
         initVC.dataSecondCityCurrent = res.current;
         initVC.dataSecondCityHistory = res.history;
         initVC.dataSecondCityForecast = res.forecast;
@@ -692,14 +664,13 @@ initVC.getDataFromPgCurrent = function(url){
 
             initVC.datasSecondCityForecast[i] = moment.utc(initVC.dataSecondCityForecast[i].fromDateTime).format('DD/MM HH:mm');
         });
-        //initVC.pm10SecondCityForecast = initVC.pm10SecondCityForecast.slice(0,8);
-        //initVC.pm25SecondCityForecast = initVC.pm25SecondCityForecast.slice(0,8);
-        //initVC.caqiSecondCityForecast = initVC.caqiSecondCityForecast.slice(0,8);
-
-        initVC.setCurrentDataGdy();
-        initVC.createGraphHistoricGdy(res);
+        initVC.setCurrentDataSecondCity();
+        initVC.createGraphHistoricSecondCity(res);
         initVC.createGraphHistoricMinMax("second");
     });
 }
 
 initVC.init();
+
+
+
